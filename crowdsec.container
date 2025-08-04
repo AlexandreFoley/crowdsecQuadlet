@@ -1,0 +1,31 @@
+[Unit]
+Description=Crowdsec Container
+Documentation=https://docs.crowdsec.net/u/getting_started/installation/docker/
+After=network.target
+
+[Container]
+AutoUpdate=registry
+ContainerName=crowdsec
+Image=docker.io/crowdsecurity/crowdsec:latest
+Environment=GID=1000
+Network=crowdsec
+Volume=crowdsec-db:/var/lib/crowdsec/data/
+
+# logfiles locations
+Volume=./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+
+# I cannot test this until i get back home.
+# Log Parser mode
+Environment=DISABLE_LOCAL_API=true
+Environment=LOCAL_API_URL="http://10.66.66.1:8080"
+
+#Caddy interactions
+Environment="COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors"
+Environment=BOUNCER_KEY_CADDY=${CROWDSEC_API_KEY}
+Volume=./<caddy-logs>:/var/log/caddy:ro
+
+[Service]
+Restart=always
+
+
+
