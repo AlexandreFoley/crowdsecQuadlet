@@ -6,7 +6,7 @@ After=network.target
 [Container]
 AutoUpdate=registry
 ContainerName=crowdsec
-Image=docker.io/crowdsecurity/crowdsec:latest
+Image=ghcr.io/alexandrefoley/crowdsecquadlet:latest
 Environment=GID=1000
 Network=crowdsec
 Volume=crowdsec-db:/var/lib/crowdsec/data/

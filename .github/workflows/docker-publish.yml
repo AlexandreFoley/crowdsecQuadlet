@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Dockerfile'
+      - 'docker_start.sh'
   workflow_dispatch:
 
 # Add permissions for GITHUB_TOKEN to allow pushing to GHCR
