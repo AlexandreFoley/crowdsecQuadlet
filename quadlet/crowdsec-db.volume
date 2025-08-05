@@ -1,0 +1,3 @@
+[Volume]
+Description=Crowdsec DB data volume
+Name=crowdsec-db
