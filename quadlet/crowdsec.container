@@ -23,8 +23,9 @@ Environment=AGENT_USERNAME=CaddyParser
 Secret=agent_auto_registration_token:env=AGENT_AUTO_REGISTRATION_TOKEN
 # Secret=agent_password:env=AGENT_PASSWORD  # optional Podman secret for agent password registration
 
-#Caddy interactions
+# Interactions
 Environment="COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors"
+Environment="PARSERS=crowdsecurity/jellyfin-whitelist crowdsecurity/nextcloud-whitelist"
 Volume=/var/log/caddy:/var/log/caddy:ro
 
 
