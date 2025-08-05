@@ -15,37 +15,42 @@ Configure `crowdsec.container` (`quadlet/crowdsec.container`):
 - **LOCAL_API_URL** (default `http://127.0.0.1:8080`): remote API endpoint when local disabled.
 - **AGENT_USERNAME**: optional for auto-registration; required if using username/password flow.
 
-## Podman Secrets (choose one registration flow)
-
-Reference: [Crowdsec Machine Registration](https://docs.crowdsec.net/u/user_guides/machines_mgmt#machine-register)
-
-### 1. Auto-registration token
-Retrieve the token on the Crowdsec host from `/etc/crowdsec/config.yaml` under `api.client.registration_token`. Ensure your client IP is allowed by `api.server.auto_registration.allowed_ranges`.
-```bash
-echo "$AUTO_TOKEN" | podman secret create agent_auto_registration_token -
-```
-
-### 2. Username/password flow
-#### a) Generate credentials on the Crowdsec host
-```bash
-cscli machines add "<AGENT_USERNAME>" --password -o json \
-  | jq -r .password > agent_password.txt
-```
-#### b) Create the secret on your container host
-```bash
-podman secret create agent_password agent_password.txt
-```
-
-
 Volumes (under `[Container]`):
 - `crowdsec-db:/var/lib/crowdsec/data` (database storage)
 - `./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml`
 - `/var/log/caddy:/var/log/caddy:ro` (Caddy logs)
 - Add additional log mounts as needed.
+    - update acquis.yaml 
 
-**COLLECTIONS**: space-separated list of parser collections (e.g. `crowdsecurity/caddy crowdsecurity/http-cve`).
+**COLLECTIONS**: space-separated list of parser collections (e.g. `crowdsecurity/caddy crowdsecurity/http-cve`), you might want more depending on the services behind caddy.
 
-Install quadlet:
+
+### Podman Secrets (choose one registration flow)
+
+Choose one of the two registration flow, make sure the other one is removed from the container file.
+
+Reference: [Crowdsec Machine Registration](https://docs.crowdsec.net/u/user_guides/machines_mgmt#machine-register)
+
+#### 1. Auto-registration token
+Retrieve the token on the Crowdsec host from `/etc/crowdsec/config.yaml` under `api.client.registration_token`. Ensure your client IP is allowed by `api.server.auto_registration.allowed_ranges`.
+```bash
+echo "$AUTO_TOKEN" | podman secret create agent_auto_registration_token -
+```
+
+#### 2. Username/password flow
+##### a) Generate credentials on the Crowdsec host
+```bash
+cscli machines add "<AGENT_USERNAME>" --password -o json \
+  | jq -r .password > agent_password.txt
+```
+##### b) Create the secret on your container host
+```bash
+podman secret create agent_password agent_password.txt
+```
+
+
+## Install quadlet
+
 ```bash
 mkdir -p ~/.config/containers/systemd
 cp quadlet/* ~/.config/containers/systemd/
