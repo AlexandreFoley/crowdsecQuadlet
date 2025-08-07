@@ -8,7 +8,7 @@ AutoUpdate=registry
 ContainerName=crowdsec
 Image=ghcr.io/alexandrefoley/crowdsecquadlet:latest
 Environment=GID=1000
-Network=crowdsec
+Network=crowdsec.network
 Volume=crowdsec-db:/var/lib/crowdsec/data/
 
 # logfiles locations
@@ -20,7 +20,7 @@ Environment=LOCAL_API_URL="http://10.66.66.1:8080"
 # username optionnal with autoregistration, but required for user and password registration
 Environment=AGENT_USERNAME=CaddyParser 
 # Mount Podman secret and set registration token
-Secret=agent_auto_registration_token:env=AGENT_AUTO_REGISTRATION_TOKEN
+Secret=agent_auto_registration_token,type=env,target=AGENT_AUTO_REGISTRATION_TOKEN
 # Secret=agent_password:env=AGENT_PASSWORD  # optional Podman secret for agent password registration
 
 # Interactions
