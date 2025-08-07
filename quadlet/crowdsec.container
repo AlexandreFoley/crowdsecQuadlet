@@ -12,7 +12,7 @@ Network=crowdsec
 Volume=crowdsec-db:/var/lib/crowdsec/data/
 
 # logfiles locations
-Volume=./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+Volume=./crowdsec/acquis.d:/etc/crowdsec/acquis.d
 
 # Log Parser mode
 Environment=DISABLE_LOCAL_API=true

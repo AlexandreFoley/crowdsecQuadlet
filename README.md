@@ -25,9 +25,9 @@ Volumes (under `[Container]`):
 **COLLECTIONS**: space-separated list of parser collections (e.g. `crowdsecurity/caddy crowdsecurity/http-cve`), you might want more depending on the services behind caddy.
 
 
-### Podman Secrets (choose one registration flow)
+#### Podman Secrets (choose one registration flow)
 
-Choose one of the two registration flow, make sure the other one is removed from the container file.
+If The instance is in client mode ( the local api is disabled), choose one of the two registration flow, make sure the other one is removed from the container file. If the local api is enabled, then you must remove both of the registration flow.
 
 Reference: [Crowdsec Machine Registration](https://docs.crowdsec.net/u/user_guides/machines_mgmt#machine-register)
 
