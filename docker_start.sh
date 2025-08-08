@@ -248,12 +248,6 @@ fi
 
 lapi_credentials_path=$(conf_get '.api.client.credentials_path')
 
-# Restore credentials from persistent storage if they exist
-persistent_credentials_path="/var/lib/crowdsec/data/$(basename "$lapi_credentials_path")"
-if [ -f "$persistent_credentials_path" ] && [ ! -f "$lapi_credentials_path" ]; then
-    echo "Restoring credentials from persistent storage"
-    cp "$persistent_credentials_path" "$lapi_credentials_path"
-fi
 
 if isfalse "$DISABLE_LOCAL_API"; then
     # generate local agent credentials (even if agent is disabled, cscli needs a
@@ -310,6 +304,13 @@ if istrue "$DISABLE_LOCAL_API"; then
             cp "$lapi_credentials_path" "$persistent_credentials_path"
         fi
     fi
+fi
+
+# Restore credentials from persistent storage if they exist
+persistent_credentials_path="/var/lib/crowdsec/data/$(basename "$lapi_credentials_path")"
+if [ -f "$persistent_credentials_path" ] && [ ! -f "$lapi_credentials_path" ]; then
+    echo "Restoring credentials from persistent storage"
+    cp "$persistent_credentials_path" "$lapi_credentials_path"
 fi
 
 conf_set_if "$INSECURE_SKIP_VERIFY" '.api.client.insecure_skip_verify = env(INSECURE_SKIP_VERIFY)'
