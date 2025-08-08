@@ -286,6 +286,10 @@ if istrue "$DISABLE_LOCAL_API"; then
     fi
     if [  "$AGENT_PASSWORD" != "" ]; then
         conf_set_if "$AGENT_PASSWORD" '.password = strenv(AGENT_PASSWORD)' "$lapi_credentials_path"
+        # Save credentials to persistent storage after successful registration
+        echo "Saving credentials to persistent storage"
+        mkdir -p "$(dirname "$persistent_credentials_path")"
+        cp "$lapi_credentials_path" "$persistent_credentials_path"
     fi
     if [  "$AGENT_AUTO_REGISTRATION_TOKEN" != "" ]; then
         # Check if registration has already been completed
