@@ -308,7 +308,7 @@ fi
 
 # Restore credentials from persistent storage if they exist
 persistent_credentials_path="/var/lib/crowdsec/data/$(basename "$lapi_credentials_path")"
-if [ -f "$persistent_credentials_path" ] && [ ! -f "$lapi_credentials_path" ]; then
+if [ -f "$persistent_credentials_path" ]; then
     echo "Restoring credentials from persistent storage"
     cp "$persistent_credentials_path" "$lapi_credentials_path"
 fi
