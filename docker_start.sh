@@ -276,6 +276,7 @@ fi
 # ----------------
 
 conf_set_if "$LOCAL_API_URL" '.url = strenv(LOCAL_API_URL)' "$lapi_credentials_path"
+persistent_credentials_path="/var/lib/crowdsec/data/$(basename "$lapi_credentials_path")"
 
 # Agent registration for external LAPI (when local API is disabled)
 if istrue "$DISABLE_LOCAL_API"; then
@@ -311,7 +312,6 @@ if istrue "$DISABLE_LOCAL_API"; then
 fi
 
 # Restore credentials from persistent storage if they exist
-persistent_credentials_path="/var/lib/crowdsec/data/$(basename "$lapi_credentials_path")"
 if [ -f "$persistent_credentials_path" ]; then
     echo "Restoring credentials from persistent storage"
     cp "$persistent_credentials_path" "$lapi_credentials_path"
