@@ -248,6 +248,13 @@ fi
 
 lapi_credentials_path=$(conf_get '.api.client.credentials_path')
 
+# Restore credentials from persistent storage if they exist
+persistent_credentials_path="/var/lib/crowdsec/data/$(basename "$lapi_credentials_path")"
+if [ -f "$persistent_credentials_path" ] && [ ! -f "$lapi_credentials_path" ]; then
+    echo "Restoring credentials from persistent storage"
+    cp "$persistent_credentials_path" "$lapi_credentials_path"
+fi
+
 if isfalse "$DISABLE_LOCAL_API"; then
     # generate local agent credentials (even if agent is disabled, cscli needs a
     # connection to the API)
@@ -276,6 +283,7 @@ fi
 
 conf_set_if "$LOCAL_API_URL" '.url = strenv(LOCAL_API_URL)' "$lapi_credentials_path"
 
+# Agent registration for external LAPI (when local API is disabled)
 if istrue "$DISABLE_LOCAL_API"; then
     # we only use the envvars that are actually defined
     # in case of persistent configuration
@@ -286,10 +294,20 @@ if istrue "$DISABLE_LOCAL_API"; then
         conf_set_if "$AGENT_PASSWORD" '.password = strenv(AGENT_PASSWORD)' "$lapi_credentials_path"
     fi
     if [  "$AGENT_AUTO_REGISTRATION_TOKEN" != "" ]; then
-        if [  "$AGENT_USERNAME" != "" ]; then
-           cscli lapi register --url "$LOCAL_API_URL" --token "$AGENT_AUTO_REGISTRATION_TOKEN" --machine "$AGENT_USERNAME"
+        # Check if registration has already been completed
+        if [ -f "$persistent_credentials_path" ]; then
+            echo "Auto-registration already completed, skipping"
         else
-            cscli lapi register --url "$LOCAL_API_URL" --token "$AGENT_AUTO_REGISTRATION_TOKEN"
+            echo "Performing auto-registration with token"
+            if [  "$AGENT_USERNAME" != "" ]; then
+               cscli lapi register --url "$LOCAL_API_URL" --token "$AGENT_AUTO_REGISTRATION_TOKEN" --machine "$AGENT_USERNAME"
+            else
+                cscli lapi register --url "$LOCAL_API_URL" --token "$AGENT_AUTO_REGISTRATION_TOKEN"
+            fi
+            # Save credentials to persistent storage after successful registration
+            echo "Saving credentials to persistent storage"
+            mkdir -p "$(dirname "$persistent_credentials_path")"
+            cp "$lapi_credentials_path" "$persistent_credentials_path"
         fi
     fi
 fi

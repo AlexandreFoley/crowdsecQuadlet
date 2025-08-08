@@ -20,7 +20,7 @@ Environment=LOCAL_API_URL="http://10.66.66.1:8080"
 # username optionnal with autoregistration, but required for user and password registration
 Environment=AGENT_USERNAME=CaddyParser 
 # Mount Podman secret and set registration token
-Secret=agent_auto_registration_token,type=env,target=AGENT_AUTO_REGISTRATION_TOKEN
+Secret=crowdsec_auto_register_token,type=env,target=AGENT_AUTO_REGISTRATION_TOKEN
 # Secret=agent_password:env=AGENT_PASSWORD  # optional Podman secret for agent password registration
 
 # Interactions

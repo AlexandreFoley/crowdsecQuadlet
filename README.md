@@ -34,7 +34,7 @@ Reference: [Crowdsec Machine Registration](https://docs.crowdsec.net/u/user_guid
 #### 1. Auto-registration token
 Retrieve the token on the Crowdsec host from `/etc/crowdsec/config.yaml` under `api.client.registration_token`. Ensure your client IP is allowed by `api.server.auto_registration.allowed_ranges`.
 ```bash
-echo "$AUTO_TOKEN" | podman secret create agent_auto_registration_token -
+echo "-n $AUTO_TOKEN" | podman secret create agent_auto_registration_token -
 ```
 
 #### 2. Username/password flow
